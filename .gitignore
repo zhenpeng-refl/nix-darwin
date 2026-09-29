@@ -1,0 +1,7 @@
+# nix build outputs
+result
+result-*
+
+# editor swap files
+*.swp
+.*.swp
