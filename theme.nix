@@ -6,7 +6,11 @@
   programs.ghostty = {
     enable = true;
     package = null;
-    settings.theme = "Gruvbox Light";
+    settings = {
+      theme = "Gruvbox Light";
+      # Show tabs in the title bar (Chrome/Safari style), always visible
+      macos-titlebar-style = "tabs";
+    };
   };
 
   # fish: Gruvbox Light palette (fish has no built-in Gruvbox theme).
