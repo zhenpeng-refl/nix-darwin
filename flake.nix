@@ -68,6 +68,8 @@
         enable = true;
         casks = [
           "karabiner-elements"
+          "hiddenbar"  # Hidden Bar: hide menu bar icons
+          "badgeify"   # Badgeify: app badges in the menu bar
         ];
       };
       # Set Git commit hash for darwin-version.

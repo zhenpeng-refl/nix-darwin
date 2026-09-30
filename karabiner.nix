@@ -31,6 +31,9 @@ let
     + " -e 'tell application \"System Events\" to key code 36'";
 
   karabiner = {
+    # Settings > Misc > "Show icon in menu bar"
+    global.show_in_menu_bar = false;
+
     profiles = [
       {
         name = "Default profile";

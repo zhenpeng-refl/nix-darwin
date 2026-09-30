@@ -1,8 +1,9 @@
-{ pkgs, nix4nvchad, ... }:
+{ pkgs, lib, nix4nvchad, ... }:
 {
   imports = [
     nix4nvchad.homeManagerModules.default
     ./karabiner.nix
+    ./theme.nix
   ];
 
   home.username = "zhenpeng";
@@ -15,6 +16,19 @@
     (pkgs.callPackage ./pkgs/granola.nix { })
     pkgs.bazelisk    # runs the Bazel version pinned in .bazelversion
   ];
+
+  # Menu bar: hide Spotlight, Wi-Fi and Bluetooth (still reachable via
+  # Control Center). Per-key `defaults write` so other Control Center
+  # settings are left alone. On macOS 26, 8 = hidden (what System Settings
+  # > Menu Bar writes when you switch an item off).
+  home.activation.menuBarItems = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run /usr/bin/defaults -currentHost write com.apple.controlcenter WiFi -int 8
+    run /usr/bin/defaults -currentHost write com.apple.controlcenter Bluetooth -int 8
+    # Spotlight's icon is controlled by its own domain, not Control Center's
+    run /usr/bin/defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+    run /usr/bin/killall ControlCenter || true
+    run /usr/bin/killall Spotlight || true
+  '';
 
   # VS Code user settings (same package as the system-wide one)
   programs.vscode = {
