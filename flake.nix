@@ -61,6 +61,11 @@
       # Enable alternative shell support in nix-darwin.
       programs.fish.enable = true;
 
+      # Trackpad: tap to click (built-in + Bluetooth trackpads)
+      system.defaults.trackpad.Clicking = true;
+      # ...and for the current host / login window
+      system.defaults.NSGlobalDomain."com.apple.mouse.tapBehavior" = 1;
+
       # Homebrew itself is installed by nix-homebrew (module below);
       # this block declares which casks/formulae it should have.
       system.primaryUser = "zhenpeng";
