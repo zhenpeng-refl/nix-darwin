@@ -71,6 +71,9 @@
       system.primaryUser = "zhenpeng";
       homebrew = {
         enable = true;
+        brews = [
+          "herdr"  # agent multiplexer (nixpkgs lags behind upstream)
+        ];
         casks = [
           "karabiner-elements"
           "hiddenbar"  # Hidden Bar: hide menu bar icons
