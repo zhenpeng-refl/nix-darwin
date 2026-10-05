@@ -33,6 +33,7 @@
 	  zellij
 	  orbstack
 	  tailscale-gui  # Tailscale menu-bar app (+ `tailscale` CLI)
+	  scroll-reverser  # separate scroll direction for mouse vs trackpad
 	  (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
 	    alpha
 	    beta
