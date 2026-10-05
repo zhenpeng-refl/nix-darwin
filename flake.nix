@@ -81,6 +81,7 @@
           "hiddenbar"  # Hidden Bar: hide menu bar icons
           "badgeify"   # Badgeify: app badges in the menu bar
           "mos"        # Mos: smooth scrolling, separate mouse/trackpad direction
+          "macgesture" # MacGesture: global mouse gestures
         ];
       };
       # Set Git commit hash for darwin-version.
