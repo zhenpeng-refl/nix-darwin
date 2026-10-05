@@ -71,6 +71,8 @@
       system.primaryUser = "zhenpeng";
       homebrew = {
         enable = true;
+        # Uninstall any Homebrew formula/cask not listed below on each rebuild
+        onActivation.cleanup = "uninstall";
         brews = [
           "herdr"  # agent multiplexer (nixpkgs lags behind upstream)
         ];
