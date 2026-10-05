@@ -82,6 +82,7 @@
           "badgeify"   # Badgeify: app badges in the menu bar
           "mos"        # Mos: smooth scrolling, separate mouse/trackpad direction
           "macgesture" # MacGesture: global mouse gestures
+          "logitech-g-hub" # Logitech G HUB (runs Logitech's installer)
         ];
       };
       # Set Git commit hash for darwin-version.
