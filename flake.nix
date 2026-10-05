@@ -78,8 +78,7 @@
           "karabiner-elements"
           "hiddenbar"  # Hidden Bar: hide menu bar icons
           "badgeify"   # Badgeify: app badges in the menu bar
-          # nixpkgs' build fails macOS's signature check ("damaged"), so use the cask
-          "scroll-reverser"
+          "mos"        # Mos: smooth scrolling, separate mouse/trackpad direction
         ];
       };
       # Set Git commit hash for darwin-version.
