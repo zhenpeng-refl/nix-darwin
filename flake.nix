@@ -32,9 +32,7 @@
 	  gh
 	  zellij
 	  orbstack
-	  tailscale-gui  # Tailscale menu-bar app (+ `tailscale` CLI)
-	  scroll-reverser  # separate scroll direction for mouse vs trackpad
-	  (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
+	  tailscale-gui  # Tailscale menu-bar app (+ `tailscale` CLI)	  (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
 	    alpha
 	    beta
 	    gke-gcloud-auth-plugin
@@ -79,6 +77,8 @@
           "karabiner-elements"
           "hiddenbar"  # Hidden Bar: hide menu bar icons
           "badgeify"   # Badgeify: app badges in the menu bar
+          # nixpkgs' build fails macOS's signature check ("damaged"), so use the cask
+          "scroll-reverser"
         ];
       };
       # Set Git commit hash for darwin-version.
