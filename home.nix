@@ -4,6 +4,7 @@
     nix4nvchad.homeManagerModules.default
     ./karabiner.nix
     ./theme.nix
+    ./macgesture.nix
   ];
 
   home.username = "zhenpeng";
