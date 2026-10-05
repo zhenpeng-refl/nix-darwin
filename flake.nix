@@ -32,7 +32,8 @@
 	  gh
 	  zellij
 	  orbstack
-	  tailscale-gui  # Tailscale menu-bar app (+ `tailscale` CLI)	  (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
+	  tailscale-gui  # Tailscale menu-bar app (+ `tailscale` CLI)
+	  (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
 	    alpha
 	    beta
 	    gke-gcloud-auth-plugin
