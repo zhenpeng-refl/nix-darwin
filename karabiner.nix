@@ -24,13 +24,13 @@ let
   };
 
   # Double-tap a Control key -> open/focus Ghostty. Uses Karabiner's built-in
-  # open_application (no shell needed). caps_lock is optional so it still
-  # works with Caps Lock on.
+  # open_application (no shell needed). Like Karabiner's own Control-key
+  # examples, allow any modifier state so the press always matches.
   ctrlDoubleTap = key:
     let
       from = {
         key_code = key;
-        modifiers.optional = [ "caps_lock" ];
+        modifiers.optional = [ "any" ];
       };
       setFlag = value: { set_variable = { name = "ctrl_double_tap"; inherit value; }; };
     in
