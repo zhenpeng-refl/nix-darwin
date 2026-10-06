@@ -40,6 +40,18 @@
       "terminal.integrated.fontFamily" = "'IosevkaTerm Nerd Font Mono'";
       "editor.fontSize" = 13;
       "terminal.integrated.fontSize" = 13;
+      # Remote-SSH's local server streams its bootstrap commands into the
+      # remote login shell over stdin. The dev VM's login shell is fish, which
+      # buffers piped stdin until EOF, so the handshake hangs and times out.
+      # Without the local server the extension runs `ssh <host> sh` instead.
+      "remote.SSH.useLocalServer" = false;
+      "remote.SSH.remotePlatform" = {
+        "dev-zhenpeng" = "linux";
+      };
+      # Let `runOn: folderOpen` tasks (e.g. Olympus' .vscode/setup.sh) run in
+      # trusted workspaces. VS Code's "Allow" prompt would write this to the
+      # read-only user settings file and fail silently.
+      "task.allowAutomaticTasks" = "on";
     };
     profiles.default.keybindings = [
       {

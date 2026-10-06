@@ -23,6 +23,38 @@ let
     conditions = [ builtInOnly inCapsLayer ];
   };
 
+  # Double-tap a Control key -> open/focus Ghostty. Uses Karabiner's built-in
+  # open_application (no shell needed). caps_lock is optional so it still
+  # works with Caps Lock on.
+  ctrlDoubleTap = key:
+    let
+      from = {
+        key_code = key;
+        modifiers.optional = [ "caps_lock" ];
+      };
+      setFlag = value: { set_variable = { name = "ctrl_double_tap"; inherit value; }; };
+    in
+    [
+      {
+        type = "basic";
+        inherit from;
+        to = [
+          { software_function.open_application.bundle_identifier = "com.mitchellh.ghostty"; }
+          (setFlag 0)
+        ];
+        conditions = [ { type = "variable_if"; name = "ctrl_double_tap"; value = 1; } ];
+      }
+      {
+        type = "basic";
+        inherit from;
+        to = [ (setFlag 1) { key_code = key; } ];
+        to_delayed_action = {
+          to_if_invoked = [ (setFlag 0) ];
+          to_if_canceled = [ (setFlag 0) ];
+        };
+      }
+    ];
+
   # Types the secret stored in the macOS Keychain (service
   # "karabiner-caps-enter"), then presses Enter. The secret itself never
   # appears in this file, the Nix store, or karabiner.json.
@@ -72,29 +104,7 @@ let
             # as soon as another key is pressed (e.g. Ctrl+C). A second Control
             # press while the flag is set opens Ghostty instead.
             description = "Double-tap Control: open Ghostty (all keyboards)";
-            manipulators = [
-              {
-                type = "basic";
-                from.key_code = "left_control";
-                to = [
-                  { shell_command = "open -a Ghostty"; }
-                  { set_variable = { name = "ctrl_double_tap"; value = 0; }; }
-                ];
-                conditions = [ { type = "variable_if"; name = "ctrl_double_tap"; value = 1; } ];
-              }
-              {
-                type = "basic";
-                from.key_code = "left_control";
-                to = [
-                  { set_variable = { name = "ctrl_double_tap"; value = 1; }; }
-                  { key_code = "left_control"; }
-                ];
-                to_delayed_action = {
-                  to_if_invoked = [ { set_variable = { name = "ctrl_double_tap"; value = 0; }; } ];
-                  to_if_canceled = [ { set_variable = { name = "ctrl_double_tap"; value = 0; }; } ];
-                };
-              }
-            ];
+            manipulators = lib.concatMap ctrlDoubleTap [ "left_control" "right_control" ];
           }
           {
             description = "Caps layer: Enter = type Keychain secret + Enter";

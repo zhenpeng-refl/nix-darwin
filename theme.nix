@@ -10,6 +10,9 @@
       theme = "Gruvbox Light";
       # Show tabs in the title bar (Chrome/Safari style), always visible
       macos-titlebar-style = "tabs";
+      # Font for everything in the terminal, including fish
+      # (nerd-fonts.iosevka-term is installed in flake.nix)
+      font-family = "IosevkaTerm Nerd Font Mono";
     };
   };
 
