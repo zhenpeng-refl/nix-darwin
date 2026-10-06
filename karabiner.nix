@@ -71,6 +71,19 @@ let
         name = "Default profile";
         selected = true;
         virtual_hid_keyboard.keyboard_type_v2 = "ansi";
+        # Devices Karabiner should modify beyond its defaults. The GT BLE60F
+        # reports as keyboard + pointing device, which Karabiner ignores by default.
+        devices = [
+          {
+            identifiers = {
+              vendor_id = 4617;
+              product_id = 1300;
+              is_keyboard = true;
+              is_pointing_device = true;
+            };
+            ignore = false;
+          }
+        ];
         complex_modifications.rules = [
           {
             description = "Caps Lock: tap = Caps Lock, hold = caps layer (built-in keyboard)";
