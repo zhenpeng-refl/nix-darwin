@@ -6,8 +6,24 @@
   programs.ghostty = {
     enable = true;
     package = null;
+    # Ghostty ships Gruvbox Light / Light Hard but no Soft variant; the variants
+    # differ only in background, so this is Gruvbox Light on bg0_s (#f2e5bc).
+    themes."Gruvbox Light Soft" = {
+      palette = [
+        "0=#f2e5bc"  "1=#cc241d"  "2=#98971a"  "3=#d79921"
+        "4=#458588"  "5=#b16286"  "6=#689d6a"  "7=#7c6f64"
+        "8=#928374"  "9=#9d0006"  "10=#79740e" "11=#b57614"
+        "12=#076678" "13=#8f3f71" "14=#427b58" "15=#3c3836"
+      ];
+      background = "#f2e5bc";
+      foreground = "#3c3836";
+      cursor-color = "#3c3836";
+      cursor-text = "#f2e5bc";
+      selection-background = "#3c3836";
+      selection-foreground = "#f2e5bc";
+    };
     settings = {
-      theme = "Gruvbox Light";
+      theme = "Gruvbox Light Soft";
       # Show tabs in the title bar (Chrome/Safari style), always visible
       macos-titlebar-style = "tabs";
       # Font for everything in the terminal, including fish
