@@ -29,6 +29,7 @@
       # Font for everything in the terminal, including fish
       # (nerd-fonts.iosevka is installed in flake.nix)
       font-family = "Iosevka Nerd Font Mono";
+      font-size = 14; # Ghostty's macOS default is 13
     };
   };
 
