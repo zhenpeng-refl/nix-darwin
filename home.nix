@@ -63,8 +63,8 @@ in
     enable = true;
     package = pkgs.vscode;
     profiles.default.userSettings = {
-      "editor.fontFamily" = "'IosevkaTerm Nerd Font Mono', monospace";
-      "terminal.integrated.fontFamily" = "'IosevkaTerm Nerd Font Mono'";
+      "editor.fontFamily" = "'Iosevka Nerd Font Mono', monospace";
+      "terminal.integrated.fontFamily" = "'Iosevka Nerd Font Mono'";
       "editor.fontSize" = 13;
       "terminal.integrated.fontSize" = 13;
       # Remote-SSH's local server streams its bootstrap commands into the
