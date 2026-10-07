@@ -1,4 +1,29 @@
 { pkgs, lib, nix4nvchad, ... }:
+let
+  # macOS 26 (from comparing System Settings > Menu Bar on/off):
+  #   com.apple.controlcenter (currentHost) WiFi/Bluetooth: 2 = shown, 8 = hidden,
+  #   plus "NSStatusItem VisibleCC <item>" = 1 in com.apple.controlcenter while shown.
+  #   Spotlight's icon is com.apple.Spotlight (currentHost) MenuItemHidden = 1.
+  # Only touches things (and restarts ControlCenter/Spotlight) when they drifted,
+  # so the periodic check doesn't make the menu bar flicker.
+  hideMenuBarItems = pkgs.writeShellScript "hide-menu-bar-items" ''
+    changed=0
+    for item in WiFi Bluetooth; do
+      if [ "$(/usr/bin/defaults -currentHost read com.apple.controlcenter "$item" 2>/dev/null)" != 8 ]; then
+        /usr/bin/defaults -currentHost write com.apple.controlcenter "$item" -int 8
+        /usr/bin/defaults delete com.apple.controlcenter "NSStatusItem VisibleCC $item" 2>/dev/null || true
+        changed=1
+      fi
+    done
+    if [ "$changed" = 1 ]; then
+      /usr/bin/killall ControlCenter 2>/dev/null || true
+    fi
+    if [ "$(/usr/bin/defaults -currentHost read com.apple.Spotlight MenuItemHidden 2>/dev/null)" != 1 ]; then
+      /usr/bin/defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+      /usr/bin/killall Spotlight 2>/dev/null || true
+    fi
+  '';
+in
 {
   imports = [
     nix4nvchad.homeManagerModules.default
@@ -19,17 +44,19 @@
   ];
 
   # Menu bar: hide Spotlight, Wi-Fi and Bluetooth (still reachable via
-  # Control Center). Per-key `defaults write` so other Control Center
-  # settings are left alone. On macOS 26, 8 = hidden (what System Settings
-  # > Menu Bar writes when you switch an item off).
+  # Control Center). Applied on every rebuild AND re-checked every 5 minutes,
+  # because macOS flips Wi-Fi/Bluetooth back on by itself after a while.
   home.activation.menuBarItems = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    run /usr/bin/defaults -currentHost write com.apple.controlcenter WiFi -int 8
-    run /usr/bin/defaults -currentHost write com.apple.controlcenter Bluetooth -int 8
-    # Spotlight's icon is controlled by its own domain, not Control Center's
-    run /usr/bin/defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
-    run /usr/bin/killall ControlCenter || true
-    run /usr/bin/killall Spotlight || true
+    run ${hideMenuBarItems}
   '';
+  launchd.agents.hide-menu-bar-items = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "${hideMenuBarItems}" ];
+      RunAtLoad = true;
+      StartInterval = 300; # seconds
+    };
+  };
 
   # VS Code user settings (same package as the system-wide one)
   programs.vscode = {
