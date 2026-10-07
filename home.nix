@@ -65,8 +65,8 @@ in
     profiles.default.userSettings = {
       "editor.fontFamily" = "'Iosevka Nerd Font Mono', monospace";
       "terminal.integrated.fontFamily" = "'Iosevka Nerd Font Mono'";
-      "editor.fontSize" = 13;
-      "terminal.integrated.fontSize" = 13;
+      "editor.fontSize" = 14;
+      "terminal.integrated.fontSize" = 14;
       # Remote-SSH's local server streams its bootstrap commands into the
       # remote login shell over stdin. The dev VM's login shell is fish, which
       # buffers piped stdin until EOF, so the handshake hangs and times out.
