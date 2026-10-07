@@ -67,6 +67,6 @@
   # VS Code: Gruvbox theme extension + select the light variant.
   programs.vscode.profiles.default = {
     extensions = [ pkgs.vscode-extensions.jdinhlife.gruvbox ];
-    userSettings."workbench.colorTheme" = "Gruvbox Light Medium";
+    userSettings."workbench.colorTheme" = "Gruvbox Light Soft";
   };
 }
