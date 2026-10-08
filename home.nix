@@ -58,6 +58,17 @@ in
     };
   };
 
+  # Input sources: add Chinese, Simplified - Pinyin. Appended (only if missing)
+  # so existing input sources such as your English layout are kept.
+  home.activation.inputSources = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if ! /usr/bin/defaults read com.apple.HIToolbox AppleEnabledInputSources 2>/dev/null \
+        | /usr/bin/grep -q 'com.apple.inputmethod.SCIM.ITABC'; then
+      run /usr/bin/defaults write com.apple.HIToolbox AppleEnabledInputSources -array-add \
+        '<dict><key>Bundle ID</key><string>com.apple.inputmethod.SCIM</string><key>InputSourceKind</key><string>Keyboard Input Method</string></dict>' \
+        '<dict><key>Bundle ID</key><string>com.apple.inputmethod.SCIM</string><key>Input Mode</key><string>com.apple.inputmethod.SCIM.ITABC</string><key>InputSourceKind</key><string>Input Mode</string></dict>'
+    fi
+  '';
+
   # Night Shift: custom schedule 3:00 -> 2:59 (i.e. always on), warmth 60. Runs as a
   # login agent (in the GUI session, where Night Shift settings apply); it
   # also re-runs whenever this config changes on rebuild.

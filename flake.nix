@@ -66,6 +66,9 @@
       # ...and for the current host / login window
       system.defaults.NSGlobalDomain."com.apple.mouse.tapBehavior" = 1;
 
+      # Language & Region: show temperatures in Celsius
+      system.defaults.NSGlobalDomain.AppleTemperatureUnit = "Celsius";
+
       # Homebrew itself is installed by nix-homebrew (module below);
       # this block declares which casks/formulae it should have.
       system.primaryUser = "zhenpeng";
