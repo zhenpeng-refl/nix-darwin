@@ -69,7 +69,7 @@ in
     fi
   '';
 
-  # Night Shift: custom schedule 3:00 -> 2:59 (i.e. always on), warmth 60. Runs as a
+  # Night Shift: custom schedule 3:00 -> 2:59 (i.e. always on), warmth 75. Runs as a
   # login agent (in the GUI session, where Night Shift settings apply); it
   # also re-runs whenever this config changes on rebuild.
   launchd.agents.night-shift = {
@@ -79,7 +79,7 @@ in
         "${pkgs.writeShellScript "night-shift" ''
           nl=${lib.getExe pkgs.nightlight}
           $nl schedule 3:00 2:59
-          $nl temp 60  # warmth, 0-100 (System Settings slider)
+          $nl temp 75  # warmth, 0-100 (System Settings slider)
           $nl on
         ''}"
       ];
