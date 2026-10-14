@@ -33,6 +33,7 @@
 	  zellij
 	  orbstack
 	  tailscale-gui  # Tailscale menu-bar app (+ `tailscale` CLI)
+	  rclone  # mount GCS buckets: `rclone nfsmount` (no macFUSE needed)
 	  (google-cloud-sdk.withExtraComponents (with google-cloud-sdk.components; [
 	    alpha
 	    beta

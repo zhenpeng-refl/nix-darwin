@@ -136,6 +136,35 @@ in
       vi = "nvim";
       bazel = "bazelisk";
     };
+    # `gauth`: re-login gcloud on the laptop and the dev VM, each only if its
+    # credentials expired. Google Workspace reauth policy expires them daily;
+    # `--update-adc` renews the gcloud login and ADC in one browser flow.
+    # The dev VM's zsh setup can pin gcloud to a read-only service account via
+    # CLOUDSDK_* env vars, so those are cleared to check and renew your own.
+    functions.gauth = {
+      description = "Re-login gcloud on the laptop and dev VM if expired";
+      body = ''
+        set -l vm dev-zhenpeng
+        set -l as_me env -u CLOUDSDK_CORE_ACCOUNT -u CLOUDSDK_AUTH_IMPERSONATE_SERVICE_ACCOUNT
+
+        if gcloud auth application-default print-access-token --quiet </dev/null >/dev/null 2>&1
+            echo "gauth: laptop credentials are valid"
+        else
+            gcloud auth login --update-adc; or return
+        end
+
+        ssh $vm "$as_me sh -c 'gcloud auth application-default print-access-token --quiet </dev/null >/dev/null 2>&1'"
+        switch $status
+            case 0
+                echo "gauth: $vm credentials are valid"
+            case 255
+                echo "gauth: cannot reach $vm" >&2
+                return 1
+            case '*'
+                ssh -t $vm "$as_me gcloud auth login --update-adc --no-launch-browser --quiet"
+        end
+      '';
+    };
   };
 
   programs.nvchad = {
@@ -145,6 +174,11 @@ in
       nixd
       lua-language-server
     ];
+    # Lua run after NvChad loads. guifont only affects GUI frontends such as
+    # Neovide; in a terminal, nvim uses the terminal's font (Ghostty: Iosevka).
+    extraConfig = ''
+      vim.o.guifont = "Iosevka Nerd Font Mono:h14"
+    '';
     # chadrcConfig = ''
     #   local M = {}
     #   M.base46 = { theme = "catppuccin" }
