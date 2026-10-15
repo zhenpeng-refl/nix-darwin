@@ -67,6 +67,15 @@ let
   '';
 in
 {
+  # Start MacGesture at login (in the background; it's a menu bar app).
+  launchd.agents.macgesture = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "/usr/bin/open" "-g" "-b" "com.codefalling.MacGesture" ];
+      RunAtLoad = true;
+    };
+  };
+
   home.activation.macgestureRules = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run /usr/bin/defaults write com.codefalling.MacGesture rules -data "$(cat ${rulesHex})"
   '';
