@@ -179,6 +179,34 @@ in
         end
       '';
     };
+    # `mountgcs`: mount the personal GCS folder (writable) at ~/gcs/zhenpeng
+    # with `rclone nfsmount`, using the gcloud ADC login (run `gauth` when it
+    # expires). Mounts don't survive a reboot, so re-run this after one; it
+    # does nothing if the folder is already mounted. A mount whose rclone
+    # process died would hang on access, so it is force-unmounted and mounted
+    # again.
+    functions.mountgcs = {
+      description = "Mount gs://reflection-users/zhenpeng at ~/gcs/zhenpeng";
+      body = ''
+        set -l src reflection-users/zhenpeng
+        set -l dir ~/gcs/zhenpeng
+
+        if pgrep -qf "rclone nfsmount :gcs:$src $dir"
+            echo "mountgcs: $dir already mounted"
+            return
+        end
+        if not gcloud auth application-default print-access-token --quiet </dev/null >/dev/null 2>&1
+            echo "mountgcs: gcloud credentials expired; run gauth first" >&2
+            return 1
+        end
+        mount | string match -q "* on $dir (*"; and umount -f $dir
+
+        mkdir -p $dir
+        rclone nfsmount :gcs:$src $dir --gcs-env-auth \
+            --vfs-cache-mode full --vfs-cache-max-size 10G --daemon
+        and echo "mountgcs: mounted gs://$src at $dir"
+      '';
+    };
   };
 
   programs.nvchad = {
