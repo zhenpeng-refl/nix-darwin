@@ -137,24 +137,38 @@ in
       bazel = "bazelisk";
     };
     # `gauth`: re-login gcloud on the laptop and the dev VM, each only if its
-    # credentials expired. Google Workspace reauth policy expires them daily;
+    # credentials expired; `gauth refresh` skips the check and logs in on both.
+    # Google Workspace reauth policy expires them daily;
     # `--update-adc` renews the gcloud login and ADC in one browser flow.
     # The dev VM's zsh setup can pin gcloud to a read-only service account via
     # CLOUDSDK_* env vars, so those are cleared to check and renew your own.
     functions.gauth = {
-      description = "Re-login gcloud on the laptop and dev VM if expired";
+      description = "Re-login gcloud on the laptop and dev VM if expired (always with `refresh`)";
       body = ''
         set -l vm dev-zhenpeng
         set -l as_me env -u CLOUDSDK_CORE_ACCOUNT -u CLOUDSDK_AUTH_IMPERSONATE_SERVICE_ACCOUNT
+        set -l force 0
+        switch "$argv"
+            case ""
+            case refresh
+                set force 1
+            case '*'
+                echo "usage: gauth [refresh]" >&2
+                return 2
+        end
 
-        if gcloud auth application-default print-access-token --quiet </dev/null >/dev/null 2>&1
+        if test $force = 0; and gcloud auth application-default print-access-token --quiet </dev/null >/dev/null 2>&1
             echo "gauth: laptop credentials are valid"
         else
             gcloud auth login --update-adc; or return
         end
 
-        ssh $vm "$as_me sh -c 'gcloud auth application-default print-access-token --quiet </dev/null >/dev/null 2>&1'"
-        switch $status
+        set -l vm_status 1
+        if test $force = 0
+            ssh $vm "$as_me sh -c 'gcloud auth application-default print-access-token --quiet </dev/null >/dev/null 2>&1'"
+            set vm_status $status
+        end
+        switch $vm_status
             case 0
                 echo "gauth: $vm credentials are valid"
             case 255
